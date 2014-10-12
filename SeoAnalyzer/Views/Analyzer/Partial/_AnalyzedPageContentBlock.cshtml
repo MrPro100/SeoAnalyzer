@@ -1,0 +1,21 @@
+﻿@model SeoAnalyzer.Models.PageContentBlock
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Исхoдный текст  (@Model.OriginalTextCount слов)</h3>
+    </div>
+    <div class="panel-body" style="max-height: 200px;overflow-y: scroll;">
+        @Model.OriginalText
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Обработанный текст, без стоп-слов (@Model.TextWithoutStopWordsCount слов)</h3>
+    </div>
+    <div class="panel-body" style="max-height: 200px;overflow-y: scroll;">
+
+        @Model.TextWithoutStopWords
+    </div>
+</div>

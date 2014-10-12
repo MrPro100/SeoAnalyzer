@@ -1,0 +1,15 @@
+﻿@model SeoAnalyzer.Models.AnalysisResult
+
+
+<div id="searchResults">
+    @if (Model != null)
+    {
+        @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedPageInfoBlock.cshtml", Model.PageGeneralInformation)
+        
+        @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedPageContentBlock.cshtml", Model.WebPageText)
+
+        @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedMetaTagBlock.cshtml", Model.DescriptionMetaTag)
+    }
+</div>
+
+@*<textarea class="form-control" rows="3"></textarea>*@
