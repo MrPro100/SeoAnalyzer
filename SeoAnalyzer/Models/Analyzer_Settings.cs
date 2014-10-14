@@ -8,14 +8,22 @@ namespace SeoAnalyzer.Models
 {
     public class Analyzer_Settings
     {
-        //[Url]
         [Required]
         public string Url { get; set; }
 
-        [Display(Name = "Parce Title Meta Tag")]
-        public bool ParceTitleMetaTag { get; set; }
+        [Display(Name = "Title")]
+        public bool ParcePageTitle { get; set; }
 
-        [Display(Name = "Parce Description Meta Tag")]
-        public bool ParceDescriptionMetaTag { get; set; }
+        [Display(Name = "Description")]
+        public bool ParcePageDescription { get; set; }
+
+        [Display(Name = "Keywords")]
+        public bool ParcePageKeywords { get; set; }
+
+        [Display(Name = "Content")]
+        public bool ParcePageContent { get; set; }
+
+        [Display(Name = "Links")]
+        public bool ParcePageLinks { get; set; }
     }
 }

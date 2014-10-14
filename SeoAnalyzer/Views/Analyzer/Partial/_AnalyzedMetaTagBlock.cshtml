@@ -1,23 +1,39 @@
 ﻿@model SeoAnalyzer.Models.MetaTagBlock
 
-
-@if (Model.ContentTextCount != 0)
-{
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Исхoдный текст  (@Model.ContentTextCount слов)</h3>
-        </div>
-        <div class="panel-body" style="max-height: 200px;overflow-y: scroll;">
-            @Model.Content
-        </div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.Name.ToUpper() BLOCK</h3>
     </div>
+    <div class="panel-body">
+        @if (Model.ContentTextCount != 0)
+        {
+            @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedWordsTable.cshtml", Model.AnalyzedWordsTable, new ViewDataDictionary { { "TableId", @Model.Name } })
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Обработанный текст, без стоп-слов (@Model.ContentWithoutStopWordsCount слов)</h3>
-        </div>
-        <div class="panel-body" style="max-height: 200px;overflow-y: scroll;">
-            @Model.ContentWithoutStopWords
-        </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Original text (@Model.ContentTextCount words)</h3>
+                </div>
+                <div class="panel-body" style="max-height: 200px;overflow-y: scroll;">
+                    @Model.Content
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Text without stop words (@Model.ContentWithoutStopWordsCount words)</h3>
+                </div>
+                <div class="panel-body" style="max-height: 200px;overflow-y: scroll;">
+                    @Model.ContentWithoutStopWords
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">Not Found</div>
+        }
+
     </div>
-}
+</div>
+
+
+

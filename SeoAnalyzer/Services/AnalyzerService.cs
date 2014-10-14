@@ -19,9 +19,9 @@ namespace SeoAnalyzer.Services
 
             string encoding;
 
-            Uri uri = new Uri(url);
+            Uri uri = url.GetUri();
 
-            HtmlParser.HtmlParser.GetWebPageInfo(url, out encoding, out pageSize);
+            HtmlParser.HtmlParser.GetWebPageInfo(uri.ToString(), out encoding, out pageSize);
 
             return new PageInfo
             {
@@ -34,36 +34,66 @@ namespace SeoAnalyzer.Services
         public PageContentBlock BuildWebPageTextBlock(string url)
         {
 
-            var pageText = HtmlParser.HtmlParser.GetWebPageContent(url).ClearParcerResult();
+            var pageText = HtmlParser.HtmlParser.GetWebPageContent(url.GetUri().ToString()).ClearParcerResult();
+
+            var pageTextWithoutStopWords = pageText.RemoveStopWords(GetStopWords());
 
             return new PageContentBlock
             {
-
+                Name = "Content",
                 OriginalText = pageText,
                 OriginalTextCount = pageText.WordCount(),
-                TextWithoutStopWords = pageText.RemoveStopWords(GetStopWords()),
-                TextWithoutStopWordsCount = pageText.RemoveStopWords(GetStopWords()).WordCount()
+                TextWithoutStopWords = pageTextWithoutStopWords,
+                TextWithoutStopWordsCount = pageTextWithoutStopWords.WordCount(),
+                AnalyzedWordsTable = GenerateWordsTable(pageTextWithoutStopWords)
 
             };
+        }
 
+        public PageContentBlock BuildWebPageTitleBlock(string url)
+        {
+
+            var titleText = HtmlParser.HtmlParser.GetWebPageTitle(url.GetUri().ToString()).ClearParcerResult();
+
+            var titleTexttWithoutStopWords = titleText.RemoveStopWords(GetStopWords());
+
+            return new PageContentBlock
+            {
+                Name = "Title",
+                OriginalText = titleText,
+                OriginalTextCount = titleText.WordCount(),
+                TextWithoutStopWords = titleTexttWithoutStopWords,
+                TextWithoutStopWordsCount = titleTexttWithoutStopWords.WordCount(),
+                AnalyzedWordsTable = GenerateWordsTable(titleTexttWithoutStopWords)
+
+            };
         }
 
         public MetaTagBlock BuildMetaTagBlock(string url, string metaTagName)
         {
 
-            var pageText = HtmlParser.HtmlParser.GetWebPageMetaTagContent(url, metaTagName).ClearParcerResult();
+            var pageText = HtmlParser.HtmlParser.GetWebPageMetaTagContent(url.GetUri().ToString(), metaTagName).ClearParcerResult();
+
+            var contentWithoutStopWords = pageText.RemoveStopWords(GetStopWords());
 
             return new MetaTagBlock
             {
-
                 Name = metaTagName,
                 Content = pageText,
                 ContentTextCount = pageText.WordCount(),
-                ContentWithoutStopWords = pageText.RemoveStopWords(GetStopWords()),
-                ContentWithoutStopWordsCount = pageText.RemoveStopWords(GetStopWords()).WordCount()
+                ContentWithoutStopWords = contentWithoutStopWords,
+                ContentWithoutStopWordsCount = contentWithoutStopWords.WordCount(),
+                AnalyzedWordsTable = GenerateWordsTable(contentWithoutStopWords)
 
             };
 
+        }
+
+        public List<PageLink> GetPageLinks(string url)
+        {
+            var pageLinks = HtmlParser.HtmlParser.GetWebPageLinks(url.GetUri().ToString());
+
+            return pageLinks.Select(x => new PageLink { Url = x.Url, Text = x.Text }).ToList();
         }
 
         public string[] GetStopWords()
@@ -84,7 +114,30 @@ namespace SeoAnalyzer.Services
             return stopWords.ToArray();
         }
 
-      
 
+        public List<AnalyzedWordForTable> GenerateWordsTable(string textWithoutStopWords)
+        {
+            List<AnalyzedWordForTable> result = new List<AnalyzedWordForTable>();
+
+            var textWithoutDuplicates = textWithoutStopWords.ClearParcerResult()
+            .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Where(x => x.Length >= 3)
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .OrderBy(x => x);
+
+            foreach (string s in textWithoutDuplicates)
+            {
+                var wordOccurrencesCount = s.CountWordOccurrences(textWithoutStopWords);
+
+                if (wordOccurrencesCount > 0)
+                    result.Add(new AnalyzedWordForTable()
+                    {
+                        Word = s,
+                        WordOccurrencesCount = wordOccurrencesCount,
+                        PercentWordCount = wordOccurrencesCount.GetPercentWordCount(textWithoutStopWords.WordCount())
+                    });
+            }
+            return result;
+        }
     }
 }

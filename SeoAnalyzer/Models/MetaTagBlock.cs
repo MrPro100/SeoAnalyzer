@@ -17,5 +17,7 @@ namespace SeoAnalyzer.Models
         public string ContentWithoutStopWords { get; set; }
 
         public int ContentWithoutStopWordsCount { get; set; }
+
+        public virtual ICollection<AnalyzedWordForTable> AnalyzedWordsTable { get; set; }
     }
 }

@@ -19,21 +19,40 @@ namespace SeoAnalyzer.Controllers
             return View();
         }
 
+        public ActionResult StopWordsModal()
+        {
+            StopWords model = new StopWords
+            {
+                StopWordsArray = String.Join(", ", _analyzeService.GetStopWords())
+            };
+            return PartialView("~/Views/Analyzer/Partial/_StopWordsModal.cshtml", model);
+        }
+
 
         public ActionResult Analyzer(Analyzer_Settings settings)
         {
             if (ModelState.IsValid)
             {
-                AnalysisResult model = new AnalysisResult
+                try
                 {
-                    PageGeneralInformation = _analyzeService.BuildWebPageInfoBlock(settings.Url),
-                    WebPageText = _analyzeService.BuildWebPageTextBlock(settings.Url),
-                    DescriptionMetaTag = _analyzeService.BuildMetaTagBlock(settings.Url, "description")
+                    AnalysisResult model = new AnalysisResult
+                    {
+                        PageGeneralInformation = _analyzeService.BuildWebPageInfoBlock(settings.Url),
+                        Title = settings.ParcePageTitle ? _analyzeService.BuildWebPageTitleBlock(settings.Url) : null,
+                        WebPageText = settings.ParcePageContent ? _analyzeService.BuildWebPageTextBlock(settings.Url) : null,
+                        DescriptionMetaTag = settings.ParcePageDescription ? _analyzeService.BuildMetaTagBlock(settings.Url, "description") : null,
+                        KeywordsMetaTag = settings.ParcePageKeywords ? _analyzeService.BuildMetaTagBlock(settings.Url, "keywords") : null,
+                        PageLinks = settings.ParcePageLinks ? _analyzeService.GetPageLinks(settings.Url) : null,
 
+                    };
 
-                };
+                    return PartialView("~/Views/Analyzer/Partial/_AnalysisResult.cshtml", model);
+                }
 
-                return PartialView("~/Views/Analyzer/Partial/_AnalysisResult.cshtml", model);
+                catch (Exception ex)
+                {
+                    return PartialView("~/Views/Shared/Error.cshtml", new Error { ErrorException = ex });
+                }
             }
             else
             {

@@ -12,80 +12,85 @@ namespace SeoAnalyzer.HtmlParser
     {
         public static string GetWebPageContent(string url)
         {
-            if (!url.ToUpper().StartsWith("HTTP://"))
-            {
-                url = "http://" + url;
-            }
-
             var hw = new HtmlWeb();
+
             HtmlDocument doc = hw.Load(url);
 
-
-           var body = doc.DocumentNode.SelectSingleNode("//body");
-
-
-
-           body.InnerHtml.Replace("<!--", "").Replace("-->", "");
-
- 
             StringBuilder sb = new StringBuilder();
-            IEnumerable<HtmlNode> nodes = body.Descendants().Where(n =>
+            IEnumerable<HtmlNode> nodes = doc.DocumentNode.Descendants().Where(n =>
                 n.NodeType == HtmlNodeType.Text &&
                 n.ParentNode.Name != "script" &&
                 n.ParentNode.Name != "head" &&
                 n.ParentNode.Name != "title" &&
-                    //n.ParentNode.Name != "a" &&
                 n.ParentNode.Name != "style");
             foreach (HtmlNode node in nodes)
             {
-
-                //sb.Append(Regex.Replace(node.InnerText, @"<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|[^\w\s\-\.\(\)]|[\-+]|[\.)(]", " "));
                 sb.Append(node.InnerText);
             }
 
             return sb.ToString();
-
         }
 
         public static string GetWebPageMetaTagContent(string url, string name)
         {
-            if (!url.ToUpper().StartsWith("HTTP://"))
-            {
-                url = "http://" + url;
-            }
-
-            //string.Format
             var Webget = new HtmlWeb();
             var doc = Webget.Load(url);
-            HtmlNode ourNode = doc.DocumentNode.SelectSingleNode(string.Format("//meta[@name='{0}']", name));
-            if (ourNode != null)
+            HtmlNode metaNode = doc.DocumentNode.SelectSingleNode(string.Format("//meta[@name='{0}']", name));
+            if (metaNode != null)
             {
-                //return Regex.Replace(ourNode.GetAttributeValue("content", ""), @"<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|[^\w\s\-\.\(\)]|[\-+]|[\.)(]", " ");
-
-                return ourNode.GetAttributeValue("content", "");
+                return metaNode.GetAttributeValue("content", "");
             }
             else
             {
-                return "not fount";
+                return string.Empty;
             }
-
         }
 
-        public static void GetWebPageInfo (string url, out string encoding, out int pageSize)
+        public static void GetWebPageInfo(string url, out string encoding, out int pageSize)
         {
-                     if (!url.ToUpper().StartsWith("HTTP://"))
-            {
-                url = "http://" + url;
-            }
-
             var hw = new HtmlWeb();
             HtmlDocument doc = hw.Load(url);
-
 
             encoding = doc.Encoding.WebName;
 
             pageSize = Encoding.Default.GetByteCount(doc.DocumentNode.InnerHtml) / 1024;
+        }
 
+        public static string GetWebPageTitle(string url)
+        {
+            var Webget = new HtmlWeb();
+            var doc = Webget.Load(url);
+            HtmlNode titleNode = doc.DocumentNode.SelectSingleNode("//title");
+            if (titleNode != null)
+            {
+                return titleNode.InnerText;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        public static List<dynamic> GetWebPageLinks(string url)
+        {
+            var webGet = new HtmlWeb();
+            var document = webGet.Load(url);
+            var linksOnPage = from lnks in document.DocumentNode.Descendants()
+                              where lnks.Name == "a" &&
+                                   lnks.Attributes["href"] != null &&
+                                   lnks.InnerText.Trim().Length > 0 &&
+                                   lnks.ParentNode.Name != "script" &&
+                                   lnks.ParentNode.Name != "head" &&
+                                   lnks.ParentNode.Name != "style" &&
+                                   lnks.InnerText.Trim().Length > 22
+
+                              select new 
+                              {
+                                  Url = lnks.Attributes["href"].Value,
+                                  Text = lnks.InnerText
+                              };
+
+            return linksOnPage.ToList<dynamic>();
         }
     }
 }

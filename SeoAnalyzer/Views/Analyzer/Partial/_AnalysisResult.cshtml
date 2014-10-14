@@ -1,15 +1,31 @@
 ﻿@model SeoAnalyzer.Models.AnalysisResult
 
-
 <div id="searchResults">
     @if (Model != null)
     {
         @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedPageInfoBlock.cshtml", Model.PageGeneralInformation)
-        
-        @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedPageContentBlock.cshtml", Model.WebPageText)
 
-        @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedMetaTagBlock.cshtml", Model.DescriptionMetaTag)
+        if (Model.Title != null)
+        {
+            @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedPageContentBlock.cshtml", Model.Title)
+        }
+
+        if (Model.WebPageText != null)
+        {
+            @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedPageContentBlock.cshtml", Model.WebPageText)
+        }
+
+        if (Model.DescriptionMetaTag != null)
+        {
+            @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedMetaTagBlock.cshtml", Model.DescriptionMetaTag)
+        }
+        if (Model.KeywordsMetaTag != null)
+        {
+            @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedMetaTagBlock.cshtml", Model.KeywordsMetaTag)
+        }
+        if (Model.PageLinks != null)
+        {
+            @Html.Partial("~/Views/Analyzer/Partial/_AnalyzedPageLinks.cshtml", Model.PageLinks)
+        }
     }
 </div>
-
-@*<textarea class="form-control" rows="3"></textarea>*@
