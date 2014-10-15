@@ -59,5 +59,21 @@ namespace SeoAnalyzer.Controllers
                 return View(settings);
             }
         }
+
+        [HttpPost]
+        public ActionResult SaveStopWordsList(StopWords text)
+        {
+            if (ModelState.IsValid)
+            {
+                _analyzeService.SaveStopWords(text.StopWordsArray);
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(text);
+            }
+
+        }
     }
 }

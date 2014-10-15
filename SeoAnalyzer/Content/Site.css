@@ -55,6 +55,11 @@ form.form-search:before
     display: none;
 }
 
+#error-modal
+{
+    display: none;
+}
+
 .modal-body
 {
     position: relative;

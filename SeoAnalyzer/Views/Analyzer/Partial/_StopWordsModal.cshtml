@@ -1,18 +1,29 @@
 ﻿@model SeoAnalyzer.Models.StopWords
 
+@Scripts.Render("~/bundles/jqueryval")
 
 <div class="modal-body">
 
-    @using (Html.BeginForm("Lyubomir", "Home", FormMethod.Post))
+    @using (Html.BeginForm("SaveStopWordsList", "Analyzer", FormMethod.Post, new { @id = "modal-form" }))
     {
         <div class="container" style="padding:20px;">
             <div class="row">
-                <textarea class="form-control" rows="16" style="resize: vertical;">@Model.StopWordsArray</textarea>
+                <div class="col-xs12 col-md-12">
+                    <div id="error-modal" class="alert alert-danger alert-dismissible" role="alert">
+                        <strong><span class="glyphicon glyphicon-exclamation-sign"></span> @Html.ValidationMessageFor(model => model.StopWordsArray)</strong>
+                    </div>
+
+                    @Html.TextAreaFor(model => model.StopWordsArray, new { rows = 16, @class = "form-control", @style = "resize: vertical;", @id = "modal-textarea" })
+                </div>
+
+                <div class="col-xs12 col-md-12" style="padding-top: 20px;">
+                    <div class="alert alert-warning" role="alert"><strong><span class="glyphicon glyphicon-info-sign"></span> Warning! Enter Stop Words only separated by commas.</strong></div>
+                </div>
+
             </div>
             <div class="row" style="margin-top:20px">
                 <div class="col-xs-6 col-md-6 text-left">
                     <button type="submit" id="approve-btn" class="btn btn-danger btn-lg"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
-
                 </div>
                 <div class="col-xs-6 col-md-6 text-right">
                     <button type="button" class="btn btn-default btn-lg" data-dismiss="modal"> <span class="glyphicon glyphicon-remove"></span> Cancel</button>
@@ -30,7 +41,22 @@
     {
         $('#approve-btn').click(function ()
         {
+            if (!$('#modal-form').valid())
+            {
+                $('#error-modal').show();
+                return false;
+            }
+            $('#modal-form').submit();
+            $('#error-modal').hide();
             $('#modal-container').modal('hide');
         });
+
     });
+
+    $("#modal-textarea").on('keydown', function (event)
+    {
+        if ($(this).val().length > 0)
+            $('#error-modal').hide();
+    });
+
 </script>

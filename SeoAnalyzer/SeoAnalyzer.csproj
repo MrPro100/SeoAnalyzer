@@ -193,6 +193,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\DataTables-1.10.2\css\dataTables.responsive.scss" />
     <Content Include="Content\DataTables-1.10.2\css\dataTables.jqueryui.scss" />
+    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DataTables-1.10.2\dataTables.autoFill.js" />
     <Content Include="Scripts\DataTables-1.10.2\dataTables.autoFill.min.js" />
@@ -228,6 +229,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="StopWords.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -241,7 +243,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Analyzer\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <None Include="Views\Analyzer\Partial\_AnalysisResult.cshtml" />
+    <Content Include="Views\Analyzer\Partial\_AnalysisResult.cshtml" />
     <Content Include="Views\Analyzer\Partial\_AnalyzedMetaTagBlock.cshtml" />
     <Content Include="Views\Analyzer\Partial\_AnalyzedPageContentBlock.cshtml" />
     <Content Include="Views\Analyzer\Partial\_AnalyzedPageInfoBlock.cshtml" />

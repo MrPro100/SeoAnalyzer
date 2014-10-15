@@ -107,11 +107,23 @@ namespace SeoAnalyzer.Services
                 string[] fromTxt = line.Split(',');
                 foreach (string word in fromTxt)
                 {
-                    stopWords.Add(word);
+                    stopWords.Add(word.Trim());
                 }
 
             }
             return stopWords.ToArray();
+        }
+
+
+        public void  SaveStopWords(string text)
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var filePath = Path.Combine(baseDirectory, "StopWords.txt");
+
+            using (var writer = new StreamWriter(filePath,false))
+            {
+                writer.Write(text);
+            }
         }
 
 
