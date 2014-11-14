@@ -14,6 +14,7 @@ namespace SeoAnalyzer.Extensions
             string pattern = " (" + string.Join("|", stopWords) + ") ";
             string cleaned = Regex.Replace(initialText, pattern, " ");
             return cleaned;
+
         }
 
         public static int WordCount(this string text)
@@ -32,7 +33,9 @@ namespace SeoAnalyzer.Extensions
 
         public static string ClearParcerResult(this string resultText)
         {
-            return Regex.Replace(resultText, @"<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|[^\w\s\-\.\(\)]|[\-+]|[\.)(]|[\s+]", " ").ToLower().Trim();
+          var resultTextFormated = string.Join(" ", resultText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+          return Regex.Replace(resultTextFormated, @"<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|[^\w\s\-\.\(\)]|[\-+]|[\.)(]|[\s+]", " ").ToLower().Trim();
         }
 
         public static Uri GetUri(this string url)
@@ -52,6 +55,20 @@ namespace SeoAnalyzer.Extensions
             if (pageTextCount == 0) return 0;
 
             return Math.Round((wordCount / (pageTextCount / 100M)), 4);      
+        }
+
+
+        /// <summary>Обрезает все передние, задние пробелы и в середине оставляет по одному</summary>
+        public static string TrimFull(this string str)
+        {
+            if (str != null)
+            {
+                Regex rgx = new Regex(@"((?!\n)\s){2,}");
+                var result = rgx.Replace(str.Trim(), " ");
+                return result;
+            }
+
+            return null;
         }
     }
 }

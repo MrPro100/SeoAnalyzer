@@ -34,7 +34,7 @@ namespace SeoAnalyzer.Services
         public PageContentBlock BuildWebPageTextBlock(string url)
         {
 
-            var pageText = HtmlParser.HtmlParser.GetWebPageContent(url.GetUri().ToString()).ClearParcerResult();
+            var pageText = HtmlParser.HtmlParser.GetWebPageContent(url.GetUri().ToString()).ClearParcerResult().TrimFull();
 
             var pageTextWithoutStopWords = pageText.RemoveStopWords(GetStopWords());
 
@@ -53,7 +53,7 @@ namespace SeoAnalyzer.Services
         public PageContentBlock BuildWebPageTitleBlock(string url)
         {
 
-            var titleText = HtmlParser.HtmlParser.GetWebPageTitle(url.GetUri().ToString()).ClearParcerResult();
+            var titleText = HtmlParser.HtmlParser.GetWebPageTitle(url.GetUri().ToString()).ClearParcerResult().TrimFull();
 
             var titleTexttWithoutStopWords = titleText.RemoveStopWords(GetStopWords());
 
@@ -72,7 +72,7 @@ namespace SeoAnalyzer.Services
         public MetaTagBlock BuildMetaTagBlock(string url, string metaTagName)
         {
 
-            var pageText = HtmlParser.HtmlParser.GetWebPageMetaTagContent(url.GetUri().ToString(), metaTagName).ClearParcerResult();
+            var pageText = HtmlParser.HtmlParser.GetWebPageMetaTagContent(url.GetUri().ToString(), metaTagName).ClearParcerResult().TrimFull();
 
             var contentWithoutStopWords = pageText.RemoveStopWords(GetStopWords());
 
@@ -131,7 +131,7 @@ namespace SeoAnalyzer.Services
         {
             List<AnalyzedWordForTable> result = new List<AnalyzedWordForTable>();
 
-            var textWithoutDuplicates = textWithoutStopWords.ClearParcerResult()
+            var textWithoutDuplicates = textWithoutStopWords.ClearParcerResult().TrimFull()
             .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
             .Where(x => x.Length >= 3)
             .Distinct(StringComparer.CurrentCultureIgnoreCase)
